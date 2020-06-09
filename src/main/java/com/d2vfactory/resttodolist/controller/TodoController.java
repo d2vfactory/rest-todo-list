@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ import java.util.Map;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
-@RequestMapping("/api/todo")
+@RequestMapping(value = "/api/todo", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class TodoController {
 
@@ -56,7 +57,7 @@ public class TodoController {
     }
 
     @GetMapping("/allActiveTodo")
-    public ResponseEntity getActiveTodoList(){
+    public ResponseEntity getActiveTodoList() {
         Map<String, List<ReferenceTodoDTO>> map = new HashMap<>();
         map.put("todoList", queryService.getActiveTodoList());
         return ResponseEntity.ok(map);
@@ -68,7 +69,6 @@ public class TodoController {
         TodoResource todoResource = new TodoResource(queryService.getTodo(id));
         return ResponseEntity.ok(todoResource);
     }
-
 
 
     @PostMapping
