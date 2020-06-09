@@ -1,7 +1,6 @@
 package com.d2vfactory.resttodolist.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -17,8 +16,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
         long startTime = Instant.now().toEpochMilli();
-        log.info("Request URL::" + request.getRequestURL().toString() +
-                ":: Start Time=" + Instant.now());
+        log.info("Request URL={} :: Start Time={}", request.getRequestURL().toString(), Instant.now());
         request.setAttribute("startTime", startTime);
         return true;
     }
@@ -27,8 +25,6 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 
         long startTime = (Long) request.getAttribute("startTime");
-
-        log.info("Request URL::" + request.getRequestURL().toString() +
-                ":: Time Taken=" + (Instant.now().toEpochMilli() - startTime));
+        log.info("Request URL={} :: Time Taken={}", request.getRequestURL().toString(), (Instant.now().toEpochMilli() - startTime));
     }
 }
