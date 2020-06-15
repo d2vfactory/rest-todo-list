@@ -49,6 +49,8 @@ public class TodoQueryService {
 
     public TodoDTO getTodo(Long id) {
         Todo todo = todoRepository.findById(id).orElseThrow(NotFoundTodoException::new);
+        // one to many, many to many : lazy fetch
+        // => 필요한 객체만 초기화 하여 lazy exception 발생하지 않게 한다.
         Hibernate.initialize(todo.getReference());
         Hibernate.initialize(todo.getReferenced());
         return new TodoDTO(todo);
