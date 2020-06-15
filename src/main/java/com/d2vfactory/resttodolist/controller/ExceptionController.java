@@ -16,14 +16,12 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = RuntimeTodoException.class)
     public ExceptionResource handleTodoException(RuntimeTodoException e) {
-        ExceptionResource exceptionResource = new ExceptionResource(createExceptionDTO(e));
-        return exceptionResource;
+        return new ExceptionResource(createExceptionDTO(e));
     }
 
     @ExceptionHandler(value = Exception.class)
     public ExceptionResource handleException(Exception e) {
-        ExceptionResource exceptionResource = new ExceptionResource(createExceptionDTO(e));
-        return exceptionResource;
+        return new ExceptionResource(createExceptionDTO(e));
     }
 
     private ExceptionDTO createExceptionDTO(Exception e) {

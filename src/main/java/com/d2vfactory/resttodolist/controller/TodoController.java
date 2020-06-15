@@ -80,8 +80,7 @@ public class TodoController {
 
         URI createdUri = linkTo(TodoController.class).slash(todo.getId()).toUri();
 
-        TodoResource todoResource = new TodoResource(todo);
-        return ResponseEntity.created(createdUri).body(todoResource);
+        return ResponseEntity.created(createdUri).body(new TodoResource(todo));
     }
 
     @PutMapping("/{id}")
@@ -93,8 +92,7 @@ public class TodoController {
 
         TodoDTO todo = commandService.updateTodo(id, form.getContent());
 
-        TodoResource todoResource = new TodoResource(todo);
-        return ResponseEntity.ok(todoResource);
+        return ResponseEntity.ok(new TodoResource(todo));
     }
 
     @PutMapping("/{id}/reference")
@@ -106,8 +104,7 @@ public class TodoController {
 
         TodoDTO todo = commandService.addReference(id, form.getReferenceIds());
 
-        TodoResource todoResource = new TodoResource(todo);
-        return ResponseEntity.ok(todoResource);
+        return ResponseEntity.ok(new TodoResource(todo));
     }
 
     @DeleteMapping("/{id}/reference")
@@ -119,8 +116,7 @@ public class TodoController {
 
         TodoDTO todo = commandService.removeReference(id, form.getReferenceIds());
 
-        TodoResource todoResource = new TodoResource(todo);
-        return ResponseEntity.ok(todoResource);
+        return ResponseEntity.ok(new TodoResource(todo));
     }
 
 
@@ -136,8 +132,7 @@ public class TodoController {
 
         TodoDTO todo = commandService.updateTodoStatus(id, status);
 
-        TodoResource todoResource = new TodoResource(todo);
-        return ResponseEntity.ok(todoResource);
+        return ResponseEntity.ok(new TodoResource(todo));
     }
 
     private ResponseEntity badRequest(Errors errors) {
