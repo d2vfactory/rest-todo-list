@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -60,15 +61,18 @@ public class MockTodoServiceTest {
                 .hasFieldOrPropertyWithValue("content", "mock 할일 참조");
     }
 
-    @Test(expected = NotFoundTodoException.class)
-    @TestDescription("[MOCK] 없는 ID 조회 상황.")
-    public void getTodo_NotFoundTodoException(){
+    @Test
+    @TestDescription("[MOCK] 없는 ID 조회 상황. - 할일 목록이 존재하지 않습니다.")
+    public void getTodo_NotFoundTodoException() {
         // given & when
-        when(mockRepository.findById(1L)).thenThrow(NotFoundTodoException.class);
-        queryService.getTodo(1L);
+        when(mockRepository.findById(1L)).thenThrow(new NotFoundTodoException());
 
         // then
-        // NotFoundTodoException
+        assertThatExceptionOfType(NotFoundTodoException.class)
+                .isThrownBy(() -> queryService.getTodo(1L))
+                .withMessage("할일 목록이 존재하지 않습니다.")
+        ;
+
     }
 
     @Test
@@ -107,9 +111,9 @@ public class MockTodoServiceTest {
 
     }
 
-    @Test(expected = HasReferenceTodoException.class)
-    @TestDescription("[MOCK] todo 완료 예외 - 완료되지 않은 참조된 할일이 있는 경우, HasReferenceTodoException 발생")
-    public void completeTodo_hasReference_exception(){
+    @Test
+    @TestDescription("[MOCK] todo 완료 예외 - 완료되지 않은 참조한 할일이 있는 경우, HasReferenceTodoException 발생")
+    public void completeTodo_hasReference_exception() {
         // given
         Todo mockTodo1 = createTodo(1L, "mock 할일");
         Todo mockTodo2 = createTodo(2L, "mock 할일 참조");
@@ -117,10 +121,13 @@ public class MockTodoServiceTest {
 
         // when
         when(mockRepository.findById(1L)).thenReturn(Optional.of(mockTodo1));
-        commandService.updateTodoStatus(1L, Status.COMPLETED);
 
         // then
-        // throw new HasReferenceTodoException
+        assertThatExceptionOfType(HasReferenceTodoException.class)
+                .isThrownBy(() ->commandService.updateTodoStatus(1L, Status.COMPLETED))
+                .withMessage("참조한 할일 목록이 존재합니다.")
+        ;
+
     }
 
     private Todo createTodo(Long id, String content) {
